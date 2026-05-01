@@ -124,7 +124,7 @@ def compute_verdict(
 
 def analyze(
     image_path: str,
-    output_dir: str = "reports",
+    output_dir: str | None = None,
     ela_quality: int = 75,
     ela_amplify: float = 15.0,
     verbose: bool = True,
@@ -142,9 +142,10 @@ def analyze(
 
     Returns
     -------
-    Full results dict with all stats, verdict, and output file paths.
+    Full results dict with all stats, verdict, and optional output file paths.
     """
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    if output_dir:
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
     stem = Path(image_path).stem
 
     def log(msg):
@@ -194,47 +195,51 @@ def analyze(
     log(f"  {'─'*56}")
 
     # ── Reports ──────────────────────────────────────────────
-    png_path  = str(Path(output_dir) / f"{stem}_forensic_report.png")
-    json_path = str(Path(output_dir) / f"{stem}_forensic_report.json")
+    png_path = None
+    json_path = None
 
-    log(f"\n  Generating visual report → {png_path}")
-    # findings are assembled after generate_report, so we pass a sentinel
-    # and let report.py render them via a second call after translate() runs.
-    # We build them now from a preliminary result dict so the PNG is complete.
-    _pre_result = {
-        "ela": ela_stats, "exif": exif_result,
-        "noise": noise_stats, "fft": fft_stats,
-        "verdict": verdict,
-    }
+    if output_dir:
+        png_path  = str(Path(output_dir) / f"{stem}_forensic_report.png")
+        json_path = str(Path(output_dir) / f"{stem}_forensic_report.json")
 
-    _findings_for_png = translate(_pre_result)
+        log(f"\n  Generating visual report → {png_path}")
+        # findings are assembled after generate_report, so we pass a sentinel
+        # and let report.py render them via a second call after translate() runs.
+        # We build them now from a preliminary result dict so the PNG is complete.
+        _pre_result = {
+            "ela": ela_stats, "exif": exif_result,
+            "noise": noise_stats, "fft": fft_stats,
+            "verdict": verdict,
+        }
 
-    generate_report(
-        image_path=image_path,
-        ela_map=ela_map,
-        original_rgb=original_rgb,
-        ela_stats=ela_stats,
-        exif_result=exif_result,
-        noise_heatmap=noise_heatmap,
-        noise_stats=noise_stats,
-        spectrum_log=spectrum_log,
-        radial_power=radial_power,
-        fft_stats=fft_stats,
-        findings=_findings_for_png,
-        output_path=png_path,
-    )
+        _findings_for_png = translate(_pre_result)
 
-    log(f"  Saving JSON report    → {json_path}")
-    save_json_report(
-        image_path=image_path,
-        ela_stats=ela_stats,
-        exif_result=exif_result,
-        noise_stats=noise_stats,
-        fft_stats=fft_stats,
-        output_path=json_path,
-    )
+        generate_report(
+            image_path=image_path,
+            ela_map=ela_map,
+            original_rgb=original_rgb,
+            ela_stats=ela_stats,
+            exif_result=exif_result,
+            noise_heatmap=noise_heatmap,
+            noise_stats=noise_stats,
+            spectrum_log=spectrum_log,
+            radial_power=radial_power,
+            fft_stats=fft_stats,
+            findings=_findings_for_png,
+            output_path=png_path,
+        )
 
-    log(f"\n  Done. Reports saved to {output_dir}/\n")
+        log(f"  Saving JSON report    → {json_path}")
+        save_json_report(
+            image_path=image_path,
+            ela_stats=ela_stats,
+            exif_result=exif_result,
+            noise_stats=noise_stats,
+            fft_stats=fft_stats,
+            output_path=json_path,
+        )
+
+        log(f"\n  Done. Reports saved to {output_dir}/\n")
 
     # ── Plain-language findings ──────────────────────────────
     full_result = {

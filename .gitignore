@@ -12,3 +12,7 @@ reports/
 *.egg-info/
 dist/
 build/
+
+/reports
+/report
+/samples
