@@ -1,0 +1,8 @@
+Pillow
+numpy
+scikit-image
+matplotlib
+scipy
+fastapi
+uvicorn[standard]
+python-multipart

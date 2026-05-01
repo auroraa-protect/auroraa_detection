@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+uploads/
+reports/
+*.png
+*.jpg
+*.jpeg
+!image_forensics/samples/**
+.env
+*.egg-info/
+dist/
+build/
