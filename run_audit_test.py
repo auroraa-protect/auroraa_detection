@@ -245,33 +245,38 @@ def _clean(obj):
 
 
 # Build slim per-image records (drop heavy raw arrays from analyze() output)
-_KEEP_VERDICT = {"verdict", "forgery_score", "color", "component_scores"}
-
 def _slim_image_record(e: dict) -> dict:
     verdict_raw = e.get("verdict", {}) or {}
     exif_raw    = e.get("exif",    {}) or {}
     return {
-        "file":         e.get("image_path", "unknown"),
-        "ground_truth": e.get("ground_truth", "UNKNOWN"),
-        "verdict":      {k: verdict_raw[k] for k in _KEEP_VERDICT if k in verdict_raw},
-        "correct":      (
+        "file":            e.get("image_path", "unknown"),
+        "ground_truth":    e.get("ground_truth", "UNKNOWN"),
+        "correct":         (
             (e["ground_truth"] == "AUTHENTIC"   and verdict_raw.get("verdict") != "LIKELY MANIPULATED") or
             (e["ground_truth"] == "MANIPULATED" and verdict_raw.get("verdict") == "LIKELY MANIPULATED")
         ),
-        "exif_risk":    exif_raw.get("risk_level"),
-        "exif_flags":   exif_raw.get("flags", []),
-        "ela": {
-            k: e.get("ela", {}).get(k)
-            for k in ("suspicious_pixel_pct", "mean_ela", "regional_variance")
-        },
-        "noise": {
-            k: e.get("noise", {}).get(k)
-            for k in ("suspicious_pct", "mean_noise", "std_noise")
-        },
-        "fft": {
-            k: e.get("fft", {}).get(k)
-            for k in ("high_freq_energy_ratio", "low_freq_energy_ratio")
-        },
+        "findings":        e.get("findings", []),
+        "verdict":         verdict_raw.get("verdict"),
+        "forgery_score":   verdict_raw.get("forgery_score"),
+        "verdict_color":   verdict_raw.get("color"),
+        "raw": {
+            "ela": e.get("ela", {}),
+            "exif": {
+                "risk_level": exif_raw.get("risk_level"),
+                "flags":      exif_raw.get("flags", []),
+                "summary":    exif_raw.get("summary"),
+                "key_fields": {
+                    k: str(v)
+                    for k, v in exif_raw.get("raw", {}).items()
+                    if k in {"Make", "Model", "Software", "DateTime", "DateTimeOriginal"}
+                },
+            },
+            "noise": e.get("noise", {}),
+            "fft": {
+                k: v for k, v in e.get("fft", {}).items()
+                if k != "fft_shape"  # not serialisable
+            },
+        }
     }
 
 
