@@ -1,8 +1,24 @@
+# ── Core forensics ─────────────────────────────────────────────
 Pillow
 numpy
 scikit-image
 matplotlib
 scipy
-fastapi
-uvicorn[standard]
-python-multipart
+
+# ── Notebook & data science ────────────────────────────────────
+jupyter
+notebook
+seaborn
+pandas
+
+# ── Machine learning ───────────────────────────────────────────
+scikit-learn
+joblib
+
+# ── GPU / CUDA (RTX 2050 — CUDA 12.x) ────────────────────────
+# torch is installed separately via the PyTorch index (see README / install.bat)
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+cupy-cuda12x
+
+# ── Kaggle dataset downloader ──────────────────────────────────
+kagglehub
