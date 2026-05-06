@@ -16,7 +16,7 @@ structured diagnosis:
 
 Usage
 ─────
-    from app.image_forensics.audit import audit_batch
+    from audit import audit_batch
 
     evaluations = [
         {"ground_truth": "AUTHENTIC",   **analyze(img1)},

@@ -15,6 +15,9 @@ pandas
 scikit-learn
 joblib
 
+# ── Document Generation ────────────────────────────────────────
+python-docx
+
 # ── GPU / CUDA (RTX 2050 — CUDA 12.x) ────────────────────────
 # torch is installed separately via the PyTorch index (see README / install.bat)
 # pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
@@ -22,3 +25,8 @@ cupy-cuda12x
 
 # ── Kaggle dataset downloader ──────────────────────────────────
 kagglehub
+
+# ── API ────────────────────────────────────────────────────────
+fastapi
+uvicorn
+python-multipart

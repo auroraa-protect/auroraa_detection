@@ -32,12 +32,12 @@ from pathlib import Path
 
 import numpy as np
 
-from app.image_forensics.core.ela import compute_ela
-from app.image_forensics.core.exif import extract_exif
-from app.image_forensics.core.noise import noise_consistency_map
-from app.image_forensics.core.fft import fft_spectrum_analysis
-from app.image_forensics.report import generate_report, save_json_report
-from app.image_forensics.translate import translate
+from app.forensics.core.phase_1.ela import compute_ela
+from app.forensics.core.phase_1.exif import extract_exif
+from app.forensics.core.phase_1.noise import noise_consistency_map
+from app.forensics.core.phase_1.fft import fft_spectrum_analysis
+from app.forensics.report import generate_report, save_json_report
+from app.forensics.translate import translate
 
 
 # ─────────────────────────────────────────────────────────────

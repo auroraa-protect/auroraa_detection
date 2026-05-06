@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
-from app.image_forensics.analyzer import analyze
+from app.forensics.analyzer import analyze
 from audit    import audit_batch
 
 

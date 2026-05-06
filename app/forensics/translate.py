@@ -49,11 +49,11 @@ _EDITING_KEYWORDS = {
     "photoshop", "gimp", "lightroom", "affinity", "pixelmator",
     "canva", "capture one", "darktable", "rawtherapee", "snapseed",
     "vsco", "adobe", "paint.net", "preview",
-}
+}  
 
 # ── Recommended actions (keyed by signal) ────────────────────────────────────
 _ACTIONS: dict[str, str] = {
-    # Verdict
+    # Verdict   [red, orange, green]
     "overall_verdict_critical":     "Reject this document and request the customer present the original physical document for in-person verification.",
     "overall_verdict_inconclusive": "Escalate to a senior fraud analyst and request a physical document plus one additional government-issued ID.",
     "overall_verdict_authentic":    "Proceed with the standard KYC workflow and retain this report in the audit file.",

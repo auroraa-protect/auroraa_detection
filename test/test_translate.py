@@ -2,7 +2,7 @@
 Quick smoke-test for the translate module.
 Run: .\venv\Scripts\python test_translate.py
 """
-from app.image_forensics.core.translate import translate
+from app.forensics.translate import translate
 
 # Simulate a high-risk manipulated document result
 mock = {

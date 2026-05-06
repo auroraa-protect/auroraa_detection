@@ -64,7 +64,7 @@ Because the target users (e.g., fraud managers at an NBFC) may not understand "L
 - It generates a list of actionable `findings`, categorized by severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFO`).
 - Example: An EXIF timestamp mismatch of 3 hours is translated into: *"Metadata creation date does not match document date — file was modified after original capture."*
 
-### 5. Report Generation & Response (`routes.py`)
+### 5. Report Generation & Response (`api.py`)
 
 - **Visual Report:** The pipeline generates a comprehensive PNG (`report.py`) showing the original image next to the ELA heatmap, Noise heatmap, and FFT spectrum.
 - **JSON Output:** All raw stats and translated findings are saved to a JSON file.

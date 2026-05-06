@@ -20,6 +20,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 import numpy as np
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
+import docx
+
 
 ROOT   = Path(__file__).parent
 ORIG   = ROOT / "samples" / "original"
@@ -103,8 +105,26 @@ def _to_pil(arr):
     return Image.fromarray(arr.astype(np.uint8))
 
 
-def save_jpeg(arr, path, quality=92):
-    _to_pil(arr).save(str(path), format="JPEG", quality=quality)
+def save_all_formats(arr, path, quality=92):
+    """Saves the array as JPEG, PDF, and DOCX."""
+    pil_img = _to_pil(arr)
+    
+    # 1. Save JPEG
+    pil_img.save(str(path), format="JPEG", quality=quality)
+    
+    # 2. Save PDF
+    pdf_path = path.with_suffix(".pdf")
+    pil_img.save(str(pdf_path), "PDF", resolution=100.0)
+    
+    # 3. Save DOCX
+    docx_path = path.with_suffix(".docx")
+    doc = docx.Document()
+    # Use BytesIO to insert image into docx without extra temp files
+    img_buf = io.BytesIO()
+    pil_img.save(img_buf, format="PNG")
+    img_buf.seek(0)
+    doc.add_picture(img_buf, width=docx.shared.Inches(5))
+    doc.save(str(docx_path))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -120,7 +140,7 @@ def make_authentic(i):
     scene = SCENE_FNS[i % len(SCENE_FNS)](rng, i)
 
     path  = ORIG / f"authentic_{i:02d}.jpg"
-    save_jpeg(scene, path, quality=int(rng.integers(88, 95)))
+    save_all_formats(scene, path, quality=int(rng.integers(88, 95)))
     return path
 
 
@@ -212,7 +232,7 @@ def make_tampered(i):
         manipulated = tamper_fn(scene, rng)
 
     path = TAMP / f"tampered_{i:02d}.jpg"
-    save_jpeg(manipulated, path, quality=int(rng.integers(85, 94)))
+    save_all_formats(manipulated, path, quality=int(rng.integers(85, 94)))
     return path
 
 
@@ -230,6 +250,6 @@ for i in range(N):
     p = make_tampered(i)
     print(f"  [X]   {p.name}")
 
-print(f"\nDone. {N * 2} images total.")
-print(f"  {ORIG} -- {N} files")
-print(f"  {TAMP} -- {N} files")
+print(f"\nDone. {N * 2 * 3} files total (JPG, PDF, DOCX).")
+print(f"  {ORIG} -- {N * 3} files")
+print(f"  {TAMP} -- {N * 3} files")
